@@ -1,0 +1,5 @@
+default_packages:
+ - "git"
+ - "vim"
+ - "epel-release"
+ - "podman"

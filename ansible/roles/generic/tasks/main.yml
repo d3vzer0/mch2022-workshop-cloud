@@ -1,0 +1,5 @@
+- name: Installing Minimal required packages
+  ansible.builtin.dnf:
+    name: "{{ default_packages }}"
+    state: present
+

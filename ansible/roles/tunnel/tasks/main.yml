@@ -1,0 +1,32 @@
+- name: Configure SSH to only allow forwarding/tunneling for specific groups
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    insertafter: EOF
+    state: present
+    block: |
+      Match Group {{ ssh_tunnel.group }}
+        PermitOpen 127.0.0.1:8080 127.0.0.1:5601 127.0.0.1:9092
+        X11Forwarding no
+        AllowAgentForwarding no
+        ForceCommand /bin/false
+  notify: Restart ssh
+
+
+
+- name: Ensure SSH tunnel group exists
+  ansible.builtin.group:
+    name: "{{ ssh_tunnel.group }}"
+    state: present
+
+- name: Creating local user for tunneling
+  ansible.builtin.user:
+    name: "{{ ssh_tunnel.user }}"
+    groups: "{{ ssh_tunnel.group }}"
+    state: present
+
+- name: Set authorized keys
+  authorized_key:
+    user: "{{ ssh_tunnel.user }}"
+    key: "{{ item }}"
+    state: present
+  loop: "{{ ssh_tunnel.authorized_keys }}"
