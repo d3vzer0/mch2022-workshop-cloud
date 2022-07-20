@@ -1,0 +1,10 @@
+[${deployment_name}:children]
+%{ for group in jsondecode(groups) ~}
+${group.name}
+%{ endfor }
+%{ for group in jsondecode(groups) ~}
+[${group.name}]
+%{ for host in group.hosts ~}
+${host}
+%{ endfor }
+%{ endfor }
