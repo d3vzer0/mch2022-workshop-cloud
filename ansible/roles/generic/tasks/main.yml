@@ -3,3 +3,23 @@
     name: "{{ default_packages }}"
     state: present
 
+- name: Set forwarding to true
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    sysctl_set: yes
+    value: '1'
+    state: present
+    reload: yes
+
+- name: Set vm.max_map_count
+  ansible.posix.sysctl: 
+    name: vm.max_map_count
+    value: 262144
+    state: present
+    reload: yes
+    sysctl_set: yes
+
+- name: Install pexpect
+  pip:
+    name: pexpect
+

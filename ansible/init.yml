@@ -8,3 +8,6 @@
 
     - role: tunnel
       tags: ['tunnel']
+
+    - role: workshop-vulns
+      tags: ['workshop-vulns'] 

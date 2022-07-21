@@ -1,0 +1,10 @@
+- name: Reset password
+  ansible.builtin.expect:
+    command: sudo podman exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic --url https://localhost:9200 -s
+    responses:
+      Please confirm.*: y
+  register: elasticreset
+
+- name: Print the randomly generated password
+  ansible.builtin.debug:
+    msg: "{{ elasticreset.stdout_lines[1] }}"

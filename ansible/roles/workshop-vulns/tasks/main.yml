@@ -1,0 +1,54 @@
+- name: Create persistent volumes for containers
+  containers.podman.podman_volume:
+    state: present
+    name: "{{ item }}"
+  loop: "{{ podman_config.volumes }}"
+
+# - name: Create a podman network
+#   containers.podman.podman_network:
+#     name: "{{ podman_config.network.name }}"
+#     internal: true
+#     ip_range: 192.168.22.128/25
+#     gateway: 192.168.22.1
+#     subnet: 192.168.22.0/24
+#     state: present
+#     recreate: true
+#   become: true
+
+- name: Create directory to store Elastic certs
+  ansible.builtin.file:
+    path: /etc/elastic
+    state: directory
+
+- name: Start elastic instance
+  containers.podman.podman_container:
+    name: es01
+    network_aliases:
+      - es01
+    image: "{{ elastic_config.image }}"
+    ports: "{{ elastic_config.ports }}"
+    volume: "{{ elastic_config.volumes }}"
+    state: started
+
+- name: Gather facts on a specific container
+  containers.podman.podman_container_info:
+    name: es01
+  register: elasticinfo
+  
+- name: Copy generated elastic cert
+  command: sudo podman cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt /etc/elastic/
+
+# - name: Start kibana instance
+#   containers.podman.podman_container:
+#     name: kibana
+#     network_aliases: 
+#       - kibana
+#     image: "{{ kibana_config.image }}"
+#     ports: "{{ kibana_config.ports }}"
+#     volume: "{{ kibana_config.volumes }}"
+#     env:
+#        SERVER_NAME: "{{ssh_tunnel.user}}.sbpmch2022.com"
+#        ELASTICSEARCH_HOSTS: "https://{{ elasticinfo.containers[0].NetworkSettings.IPAddress }}:9200"
+#        ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: /etc/certs/http_ca.crt
+#     state: started
+

@@ -3,3 +3,4 @@ default_packages:
  - "vim"
  - "epel-release"
  - "podman"
+ - "python3"
