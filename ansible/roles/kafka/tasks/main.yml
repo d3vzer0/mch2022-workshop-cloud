@@ -1,0 +1,24 @@
+# - name: Create persistent volumes for containers
+#   containers.podman.podman_volume:
+#     state: present
+#     name: "{{ item }}"
+#   loop: "{{ podman_config.volumes }}"
+
+
+- name: Start Standalone (zookeperless) Kafka instance
+  containers.podman.podman_container:
+    name: kafka01
+    network_aliases:
+      - kafka01
+    image: "{{ kafka_config.image }}"
+    ports: "{{ kafka_config.ports }}"
+    env: "{{ kafka_config.env }}"
+    state: started
+
+- name: Gather facts on a specific container
+  containers.podman.podman_container_info:
+    name: kafka01
+  register: kafkainfo
+  
+
+
