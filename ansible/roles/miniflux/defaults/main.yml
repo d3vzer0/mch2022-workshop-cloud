@@ -1,0 +1,10 @@
+miniflux_config:
+  image: miniflux/miniflux:2.0.37
+  env:
+    DATABASE_URL: postgres://miniflux:{{ secrets.postgres.password }}@{{ postgresinfo.containers[0].NetworkSettings.IPAddress }}/miniflux?sslmode=disable
+    RUN_MIGRATIONS: 1
+    CREATE_ADMIN: 1
+    ADMIN_USERNAME: "{{ secrets.miniflux.user }}"
+    ADMIN_PASSWORD: "{{ secrets.miniflux.password }}"
+  ports:
+    - 127.0.0.1:80:8080

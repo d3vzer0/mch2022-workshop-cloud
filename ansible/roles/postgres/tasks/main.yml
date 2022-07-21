@@ -1,0 +1,17 @@
+- name: Start postgres instance
+  containers.podman.podman_container:
+    name: postgres
+    network_aliases:
+      - postgres
+    image: "{{postgres_config.image }}"
+    env: "{{ postgres_config.env }}"
+    volumes: "{{ postgres_config.volumes }}"
+    state: started
+
+- name: Gather facts on a specific container
+  containers.podman.podman_container_info:
+    name: postgres
+  register: postgresinfo
+  
+
+

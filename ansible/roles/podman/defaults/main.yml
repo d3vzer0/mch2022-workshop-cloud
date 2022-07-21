@@ -1,0 +1,8 @@
+podman_config:
+  volumes:
+    - esdata01
+    - kibana
+    - kafka01
+    - postgres
+  network:
+    name: 'workshopnet'

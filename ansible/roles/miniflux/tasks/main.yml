@@ -1,0 +1,9 @@
+- name: Start miniflux instance
+  containers.podman.podman_container:
+    name: miniflux
+    network_aliases:
+      - miniflux
+    image: "{{miniflux_config.image }}"
+    env: "{{ miniflux_config.env }}"
+    ports: "{{ miniflux_config.ports }}"
+    state: started

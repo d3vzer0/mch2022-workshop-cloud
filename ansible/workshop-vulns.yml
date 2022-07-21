@@ -1,0 +1,22 @@
+- hosts: all
+  tags: ['all', 'init']
+  become: yes
+  strategy: free
+  roles:
+    - role: generic
+      tags: ['generic']
+
+    - role: tunnel
+      tags: ['tunnel']
+
+    - role: podman
+      tags: ['podman'] 
+
+    - role: kafka
+      tags: ['kafka']
+
+    - role: postgres
+      tags: ['postgres']
+
+    - role: miniflux
+      tags: ['miniflux']
