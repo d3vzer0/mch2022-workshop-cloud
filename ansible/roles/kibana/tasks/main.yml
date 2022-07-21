@@ -1,0 +1,22 @@
+- name: Gather facts on a specific container
+  containers.podman.podman_container_info:
+    name: es01
+  register: elasticinfo
+  
+- name: Copy generated elastic cert
+  command: sudo podman cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt /etc/elastic/
+
+- name: Start kibana instance
+  containers.podman.podman_container:
+    name: kibana
+    network_aliases: 
+      - kibana
+    image: "{{ kibana_config.image }}"
+    ports: "{{ kibana_config.ports }}"
+    volume: "{{ kibana_config.volumes }}"
+    env:
+       SERVER_NAME: "{{ssh_tunnel.user}}.sbpmch2022.com"
+       ELASTICSEARCH_HOSTS: "https://{{ elasticinfo.containers[0].NetworkSettings.IPAddress }}:9200"
+       ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: /etc/certs/http_ca.crt
+    state: started
+

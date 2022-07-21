@@ -1,0 +1,14 @@
+- name: Create directory to store Elastic certs
+  ansible.builtin.file:
+    path: /etc/elastic
+    state: directory
+
+- name: Start elastic instance
+  containers.podman.podman_container:
+    name: es01
+    network_aliases:
+      - es01
+    image: "{{ elastic_config.image }}"
+    ports: "{{ elastic_config.ports }}"
+    volume: "{{ elastic_config.volumes }}"
+    state: started

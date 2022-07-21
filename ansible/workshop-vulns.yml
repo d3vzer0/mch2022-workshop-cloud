@@ -15,8 +15,14 @@
     - role: kafka
       tags: ['kafka']
 
+    - role: elastic
+      tags: ['elastic']
+
     - role: postgres
       tags: ['postgres']
 
     - role: miniflux
       tags: ['miniflux']
+
+    - role: kibana
+      tags: ['kibana']

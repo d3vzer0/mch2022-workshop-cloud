@@ -5,6 +5,17 @@
       Please confirm.*: y
   register: elasticreset
 
-- name: Print the randomly generated password
-  ansible.builtin.debug:
-    msg: "{{ elasticreset.stdout_lines[1] }}"
+- name: Get enrollment token
+  ansible.builtin.command: podman exec -it es01 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+  register: enrollmenttoken
+
+- name: Combine secrets to save locally later
+  ansible.builtin.set_fact: 
+    cluster_secrets: token="{{ enrollmenttoken.stdout_lines[0] }}", password="{{ elasticreset.stdout_lines[1] }}"
+
+- name: Write new secret and enrollment token to local disk
+  local_action:
+    module: copy 
+    content: "{{cluster_secrets}}" 
+    dest: "/tmp/mch2022-{{ssh_tunnel.user}}"
+  become: false

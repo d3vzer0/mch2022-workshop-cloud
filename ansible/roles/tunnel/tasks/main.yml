@@ -5,13 +5,11 @@
     state: present
     block: |
       Match Group {{ ssh_tunnel.group }}
-        PermitOpen 127.0.0.1:8080 127.0.0.1:5601 127.0.0.1:9092
+        PermitOpen 127.0.0.1:8080 127.0.0.1:5601 127.0.0.1:9092 127.0.0.1:9200
         X11Forwarding no
         AllowAgentForwarding no
         ForceCommand /bin/false
   notify: Restart ssh
-
-
 
 - name: Ensure SSH tunnel group exists
   ansible.builtin.group:
