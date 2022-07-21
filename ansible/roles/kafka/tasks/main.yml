@@ -14,6 +14,7 @@
     ports: "{{ kafka_config.ports }}"
     env: "{{ kafka_config.env }}"
     state: started
+    recreate: true
 
 - name: Gather facts on a specific container
   containers.podman.podman_container_info:
